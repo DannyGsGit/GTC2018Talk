@@ -95,14 +95,40 @@ To verify proper installation, run the *nvidia-smi* command to inspect hardware 
 #### 1.3.2 CUDA
 To begin, make a folder for nvidia assets and download the CUDA toolkit deb file into it:
 ```
-$ cd ~
+$ cd /usr/local
 $ mkdir nvidia
 $ cd nvidia
-$ wget "https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb"
+$ sudo wget "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb"
 ```
 Incorporate the deb file into your repos and install CUDA
 ```
-$ sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64.deb
+$ sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 $ sudo apt-get update
-$ sudo apt-get install cuda
+$ sudo apt-get install cuda-8-0
+```
+
+#### 1.3.3 cuDNN
+Next, cuDNN V6.0 for CUDA 8.0 is installed. Due to login requirements with the [cuDNN download](https://developer.nvidia.com/rdp/cudnn-download) page, download the file locally and scp it to the Ubuntu instance:
+```
+scp cudnn-8.0-linux-x64-v6.0.tgz user@192.168.1.100:/home/user/Downloads
+```
+Back on the Ubuntu machine, install cuDNN:
+```
+$ cd Downloads
+$ tar -xzvf cudnn-8.0-linux-x64-v6.0.tgz
+$ sudo cp cuda/include/cudnn.h /usr/local/cuda-8.0/include
+$ sudo cp cuda/lib64/libcudnn* /usr/local/cuda-8.0/lib64
+$ sudo chmod a+r /usr/local/cuda-8.0/include/cudnn.h /usr/local/cuda-8.0/lib64/libcudnn*
+```
+Add the following lines to ~/.bashrc to complete GPU configuration:
+```
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64:/usr/local/cuda-8.0/extras/CUPTI/lib64"
+export CUDA_HOME=/usr/local/cuda-8.0
+```
+
+### 1.4 Tensorflow Installation
+Finally, install tensorflow with gpu acceleration:
+```
+$ workon tensorflow-gpu
+(tensorflow-gpu) $ pip3 install --upgrade tensorflow-gpu
 ```
