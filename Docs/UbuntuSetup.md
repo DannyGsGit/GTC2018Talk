@@ -53,24 +53,56 @@ $ mkvirtualenv --python=$(which python3) tensorflow-gpu
 ```
 Then install basic packages. We won't install Tensorflow yet, that will happen after GPU configuration.
 ```
-pip3 install pandas numpy scipy matplotlib jupyter
+(tensorflow-gpu) $ pip3 install pandas numpy scipy matplotlib jupyter
 ```
 ### 1.3 Launch jupyter
 Next, we want to test the python installation. We will launch jupyter from a project folder where we want to work. Note the --ip flag on jupyter notebook, this is necessarry to access Jupyter remotely on the network. When logging in to Jupyter from a browser, you will be asked for a token- this token will be displayed in the SSH terminal.
 
 First, let's make a project directory.
 ```
-mkdir ~/Projects
-cd ~/Projects
-mkdir tf_wordvec
-cd tf_wordvec
+(tensorflow-gpu) $ mkdir ~/Projects
+(tensorflow-gpu) $ cd ~/Projects
+(tensorflow-gpu) $ mkdir tf_wordvec
+(tensorflow-gpu) $ cd tf_wordvec
 ```
 
 Then start a new *screen* session  called "jupytersession" and start Jupyter. Screen will make sure jupyter continues to run if we stop the SSH session.
 ```
-screen -S jupytersession
-jupyter notebook --ip='*'
+$ screen -S jupytersession (this will start a new session, you need to reactivate the virutal environment)
+$ workon tensorflow-gpu
+(tensorflow-gpu) $ jupyter notebook --ip='*'
 ```
 To detach a screen session, use Ctrl-A then Ctrl-D. You can then close the SSH window and jupyter will keep running. To re-enter the session later, type 'screen -r jupytersession'.
 
 ### 1.3 GPU Configuration
+For Tensorflow r1.4, we need to install the following NVIDIA frameworks:
+* CUDA 8.0
+* cuDNN v6.0
+
+#### 1.3.1 Drivers
+First, install drivers for the GPU.
+```
+$ sudo add-apt-repository ppa:graphics-drivers/ppa
+$ sudo apt update (re-run if any warning/error messages)
+$ sudo apt-get install nvidia-384 (press tab after - to see all versions)
+```
+When driver installation is complete, reboot the system:
+```
+$ sudo reboot
+```
+To verify proper installation, run the *nvidia-smi* command to inspect hardware configuration.
+
+#### 1.3.2 CUDA
+To begin, make a folder for nvidia assets and download the CUDA toolkit deb file into it:
+```
+$ cd ~
+$ mkdir nvidia
+$ cd nvidia
+$ wget "https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb"
+```
+Incorporate the deb file into your repos and install CUDA
+```
+$ sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64.deb
+$ sudo apt-get update
+$ sudo apt-get install cuda
+```
