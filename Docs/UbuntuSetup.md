@@ -55,7 +55,7 @@ Then install basic packages. We won't install Tensorflow yet, that will happen a
 ```
 (tensorflow-gpu) $ pip3 install pandas numpy scipy matplotlib jupyter
 ```
-### 1.3 Launch jupyter
+#### 1.2.1 Launch jupyter
 Next, we want to test the python installation. We will launch jupyter from a project folder where we want to work. Note the --ip flag on jupyter notebook, this is necessarry to access Jupyter remotely on the network. When logging in to Jupyter from a browser, you will be asked for a token- this token will be displayed in the SSH terminal.
 
 First, let's make a project directory.
